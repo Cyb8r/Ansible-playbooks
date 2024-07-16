@@ -1,0 +1,6 @@
+[server]
+4.232.188.59
+
+[server:vars]
+ansible_ssh_private_key_file=/home/demo/ansible-vm_key.pem
+ansible_user=azureuser
