@@ -1,0 +1,25 @@
+---
+- name: install node and npm on server 
+  hosts: servers
+  tasks: 
+  - name: Update apt and cache
+    apt: update_cache=yes force_apt_get=yes cache_valid_time=3600
+  - name: install node and npm
+    become: true
+    apt: 
+      pkg: 
+        - nodejs
+        - npm
+
+- name: deploy node js application
+  hosts: servers
+  tasks: 
+  - name: copy tar file 
+    copy:
+      src: /home/demo/nodejs-app/nodejs-app-1.0.0.tgz
+      dest: /home/azureuser/app-1.0.0.tgz
+  - name: unpack the nodejs tar file
+    unarchive: 
+      src: /home/azureuser/app-1.0.0.tgz
+      dest: /home/azureuser/
+      remote_src: yes

@@ -4,9 +4,10 @@
   hosts: server
   tasks: 
   - name: install nginx web servers
-    apt: 
-      name: install nginx 
-      state: latest
+    become: true
+    pkg: 
+      - name: nginx 
+      - state: latest
   - name: start nginx web servers
     service:
       name: nginx
