@@ -13,10 +13,18 @@
 - name: Unpack and Download nexus
   hosts: server
   tasks: 
-  - name: Download neust installer 
+  - name: Download nexus installer 
     get_url: 
-      url: https://download.sonatype.com/nexus/3/nexus-3.70.1-02-java8-unix.tar.gz
+      url: https://download.sonatype.com/nexus/3/latest-unix.tar.gz
       dest: /opt/
+    register: download_result
+  - name: Untar the nexus installer
+    unarchive: 
+      src: "{{download_result}}"
+      dest: /opt/
+      remotes_src: yes
+
+    
     
 
 
