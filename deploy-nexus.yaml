@@ -1,5 +1,5 @@
 ---
-- name: Install mexus and net-tools
+- name: Install nexus and net-tools
   hosts: server
   tasks: 
   - name: Update app and cache
