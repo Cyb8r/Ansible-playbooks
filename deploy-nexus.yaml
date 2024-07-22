@@ -27,7 +27,16 @@
       src: "{{download_result}}"
       dest: /opt/
       remotes_src: yes
-
+  - name: Find nexus folder
+    find: 
+      paths: /opt 
+      pattern: "nexux-*"    
+      file_type: directory   
+      register: find_result  
+  - name: Rename nexus folder
+    become: true                                                                                                            
+    shell: mv {{find_result.files[0].path}} /opt/nexus
+    
 - name: Create nexus users to own nexus folders 
   hosts: server
   tasks: 
