@@ -6,25 +6,52 @@
     become: true
     apt: update_cache=yes force_apt_get=yes cache_valid_time=3600
   - name: Install java 
+    become: true
     apt: name=openjdk-8-jre-headless
   - name: Install net-tools
+    become: true
     apt: name=net-tools
 
 - name: Unpack and Download nexus
   hosts: server
   tasks: 
-  - name: Download nexus installer 
+  - name: Download nexus installer
+    become: true
     get_url: 
       url: https://download.sonatype.com/nexus/3/latest-unix.tar.gz
       dest: /opt/
     register: download_result
   - name: Untar the nexus installer
+    become: true
     unarchive: 
       src: "{{download_result}}"
       dest: /opt/
       remotes_src: yes
 
-    
+- name: Create nexus users to own nexus folders 
+  hosts: server
+  tasks: 
+  - name: Ensure nexus group exists
+    group: 
+      name: nexus
+      state: present
+  - name: Create nexus user 
+    user: nexus
+    group: nexus
+  - name: Make nexus user owner of nexus folder 
+    file: 
+      path: /opt/nexus
+      state: directory
+      owner: nexus
+      group: nexus
+      recursive: yes
+  - name: Make nexus user owner of sonatype-work folder 
+    file: 
+      path: /opt/sonatype-work
+      state: directory
+      owner: nexus
+      group: nexus
+      recursive: yes
     
 
 
