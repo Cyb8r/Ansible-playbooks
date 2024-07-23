@@ -89,6 +89,7 @@
 
 - name: Start nexus with nexus user 
   become: true
+  become_user: nexus
   hosts: server
   tasks:
   - name: set run_as_user_nexus
