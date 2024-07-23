@@ -1,0 +1,15 @@
+---
+
+- name: Install Docker 
+  hosts: server
+  become: true
+  tasks: 
+  - name: Install Docker 
+    apt: docker
+    
+- name: Install Docker-compose
+  hosts: server
+  become: true
+  tasks: 
+  - name: Install Docker-compose
+    apt: docker-compose-plugin
