@@ -5,11 +5,13 @@
   become: true
   tasks: 
   - name: Install Docker 
-    apt: docker
+    apt: 
+    pkg: docker
     
 - name: Install Docker-compose
   hosts: server
   become: true
   tasks: 
   - name: Install Docker-compose
-    apt: docker-compose-plugin
+    apt: 
+    pkg: docker-compose-plugin
