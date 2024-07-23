@@ -4,13 +4,20 @@
   tasks: 
   - name: Update app and cache
     become: true
-    apt: update_cache=yes force_apt_get=yes cache_valid_time=3600
+    apt: 
+      update_cache: yes 
+      force_apt_get: yes 
+      cache_valid_time: 3600
+
   - name: Install java 
     become: true
-    apt: name=openjdk-8-jre-headless
+    apt: 
+      name: openjdk-8-jre-headless
+
   - name: Install net-tools
     become: true
-    apt: name=net-tools
+    apt: 
+      name: net-tools
 
 - name: Unpack and Download nexus
   hosts: server
@@ -19,48 +26,53 @@
     become: true
     get_url: 
       url: https://download.sonatype.com/nexus/3/latest-unix.tar.gz
-      dest: /opt/
+      dest: /opt/nexus-latest-unix.tar.gz
     register: download_result
+
   - name: Untar the nexus installer
     become: true
     unarchive: 
-      src: "{{download_result}}"
+      src: "{{ download_result.dest }}"
       dest: /opt/
-      remotes_src: yes
+      remote_src: yes
+
   - name: Find nexus folder
     find: 
       paths: /opt 
-      pattern: "nexux-*"    
+      pattern: "nexus-*"    
       file_type: directory   
-      register: find_result  
+    register: find_result  
+
   - name: Rename nexus folder
-    become: true                                                                                                            
-    shell: mv {{find_result.files[0].path}} /opt/nexus
-    
+    become: true
+    shell: mv {{ find_result.files[0].path }} /opt/nexus
+
 - name: Create nexus users to own nexus folders 
+  become: true
   hosts: server
   tasks: 
   - name: Ensure nexus group exists
     group: 
       name: nexus
       state: present
+
   - name: Create nexus user 
-    user: nexus
-    group: nexus
+    user: 
+      name: nexus
+      group: nexus
+
   - name: Make nexus user owner of nexus folder 
     file: 
       path: /opt/nexus
       state: directory
       owner: nexus
       group: nexus
-      recursive: yes
+      recurse: yes
+
   - name: Make nexus user owner of sonatype-work folder 
     file: 
       path: /opt/sonatype-work
       state: directory
       owner: nexus
       group: nexus
-      recursive: yes
-    
-
-
+      recurse: yes
