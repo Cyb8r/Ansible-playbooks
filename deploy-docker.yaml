@@ -6,7 +6,7 @@
   tasks: 
   - name: Install Docker 
     apt: 
-    pkg: docker
+      pkg: docker
     
 - name: Install Docker-compose
   hosts: server
@@ -14,4 +14,4 @@
   tasks: 
   - name: Install Docker-compose
     apt: 
-    pkg: docker-compose-plugin
+      pkg: docker-compose-plugin
