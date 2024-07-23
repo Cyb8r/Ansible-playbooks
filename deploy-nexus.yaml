@@ -96,3 +96,5 @@
       path: /opt/nexus/bin/nexus.rc
       regexp: '^#run_as_user=""'
       line: run_as_user="nexus" 
+  - name: start nexus
+    command: /opt/nexus/bin/nexus start
