@@ -1,17 +1,35 @@
 ---
 
-- name: Install Docker 
+- name: Install Docker
   hosts: server
   become: true
-  tasks: 
-  - name: Install Docker 
-    apt: 
+  tasks:
+  - name: Install Docker
+    apt:
       pkg: docker
-    
-- name: Install Docker-compose
-  hosts: server
-  become: true
-  tasks: 
   - name: Install Docker-compose
-    apt: 
-      pkg: docker-compose-plugin
+    apt:
+      pkg: docker-compose
+  - name: Ensure Docker is running
+    systemd:
+      name: docker
+      state: started
+
+
+- name: Add docker user to docker group
+  hosts: server
+  become: yes
+  tasks:
+  - name: add user to docker group
+    user: 
+      name: azureuser
+      groups: docker
+      append: true
+  - name: Reset server connection
+    meta: reset_connection
+
+- name: Test docker pull
+  hosts: server
+  tasks:
+  - name: pull Redis
+    command: docker pull redis
