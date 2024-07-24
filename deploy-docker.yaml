@@ -14,6 +14,9 @@
     systemd:
       name: docker
       state: started
+  - name: Install docker python module
+    pip:
+      name: docker
 
 
 - name: Add docker user to docker group
@@ -32,4 +35,12 @@
   hosts: server
   tasks:
   - name: pull Redis
-    command: docker pull redis
+    docker_image:
+      name: redis 
+      source: pull 
+
+- name: Start docker 
+  hosts: server
+  tasks: 
+  - name: Copy docker compose 
+    copy: 
