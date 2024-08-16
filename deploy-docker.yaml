@@ -16,7 +16,9 @@
       state: started
   - name: Install docker python module
     pip:
-      name: docker
+      name: 
+      - docker
+      - docker-compose
 
 
 - name: Add docker user to docker group
@@ -28,7 +30,7 @@
       name: azureuser
       groups: docker
       append: true
-  - name: Reset server connection
+  - name: Reset server connection # we reset the server comnnection to ensure new user created is added to the docker group. 
     meta: reset_connection
 
 - name: Test docker pull
@@ -39,8 +41,21 @@
       name: redis 
       source: pull 
 
-- name: Start docker 
+- name: Start docker containers
   hosts: server
+  vars_files: # set variable location to store secret 
+    - project-vars 
   tasks: 
   - name: Copy docker compose 
     copy: 
+      src: /home/dev-test/docker-compose.yaml
+      dest: /home/azureuser/docker-compose.yaml
+  - name: Docker login
+    docker_login: 
+      registry_url: https://index.docker.io/v1/
+      username: cyb3rjay@outlook.com
+      password: "{{docker_password}}"
+  - name: Start docker container from compose 
+    docker_compose: 
+      project_src: /home/azureuser # identify the docker compose file location 
+      state: present # docker compose up 
